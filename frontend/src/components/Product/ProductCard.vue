@@ -33,19 +33,25 @@ export default {
 </script>
 
 <template>
-    <div class="w-70 min-h-120 rounded-3xl border-2 border-stone-600 overflow-hidden
-     bg-gradient-to-t from-neutral-800 to-stone-700
-    ">
-        <div class="w-full flex-col items-center text-violet-100">
-            <div class="w-full flex justify-center mt-2 overflow-hidden ">
+   <div class="w-70 min-h-120 rounded-3xl border-2 border-stone-600 overflow-hidden bg-gradient-to-t from-neutral-800 to-stone-700">
+        <div class="w-full flex-col items-center text-violet-100 p-4">
+            <div class="w-full flex justify-center mt-1 overflow-hidden">
                 <img :src="image" alt="Product image" class="w-60 rounded-lg border-2 border-stone-600">
             </div>
-            <div class="flex flex-col items-center gap-2">
-                <h2 class="mt-2 text-xl">{{ title }}</h2>
-                <h3 class="mt-2 text-xs mx-5">{{ description }}</h3>
-                <h2 class="text-3xl text-violet-300 mt-3"> ${{ price }}</h2>
-                <ProductButton :remove="remove"></ProductButton>
+            <div class="flex flex-col h-full items-center justify-between mt-4 space-y-4">
+                <h2 class="text-2xl">{{ title }}</h2>
+                <h3 class="text-xs mx-5">{{ description }}</h3>
+                <h2 class="text-3xl text-violet-300">${{ price }}</h2>
+                <form>
+                    <ProductButton :remove="remove"/>
+                    <input type="hidden" name="id" :value="id"/>
+                    
+                    <select name="" id="quantity">
+
+                    </select>
+                </form>
             </div>
         </div>
     </div>
+
 </template>
