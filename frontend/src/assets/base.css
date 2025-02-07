@@ -50,6 +50,23 @@
     --color-text: var(--vt-c-text-dark-2);
   }
 }
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(33, 33, 35);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7c3aed;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a040ff;
+}
 
 body{
   background-color: #181818;

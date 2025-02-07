@@ -3,19 +3,9 @@ export default {
     props : {
         remove : {
             type: Boolean,
-            default: false
-        }
-    },
-
-    methods:{
-        handleAddToCart(){
-            alert("added to cart");
+            default: false,
         },
-
-         handleRemoveFromCart(){
-            alert("removed from cart")
-        }
-    }
+    },
 }
 </script>
 
@@ -25,7 +15,7 @@ export default {
         'bg-red-700 hover:bg-red-600':remove
         }" 
         class="w-60 h-10 rounded-lg text-xl cursor-pointer transition-all duration-300"
-        @click.prevent="remove ? handleRemoveFromCart() : handleAddToCart()"
+        @click.prevent="remove ? $emit('remove') : $emit('add')"
     >
         
         <span v-if="remove">Remove from cart</span>

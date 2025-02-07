@@ -37,21 +37,20 @@ class ProductController extends Controller
     }
 
     /**
-     * Queries and opens the view for the products dashboard along with the fetched products
+     * Returns a collection of all the products
      * 
-     * @return \Illuminate\Contracts\View\View
+     * @return ProductCollection
      */
-    public function dashboard()
+    public function all()
     {
-        $products = Product::query()->simplePaginate(12);
-
-        return view('products.products', compact('products'));
+        return new ProductCollection(Product::all());
     }
 
     /**
-     * Attempts to destroy a product by its id
+     * Deletes a product from the database, as well as its corresponding image from the storage if there is one
      * 
      * @param Product $product
+     * 
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Product $product)
@@ -62,29 +61,31 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.dashboard');
+        return response()->json(['status' => 'ok']);
     }
 
     /**
-     * Attempts to store a product in the database and saves the images associated with it if it exists
+     * Inserts a new product in the database and returns it as response
      * 
-     * @return \Illuminate\Http\RedirectResponse
+     * @return ProductResource
      */
     public function store()
     {
         $product = $this->validateAndSaveProduct(new Product());
-        return redirect()->route('products.edit', $product);
+
+        return new ProductResource($product);
     }
 
     /**
-     * Attempts to update a product in the database and saves the images associated with it if it exists
+     * Updates a product from the database and returns it as response
      * 
-     * @return \Illuminate\Http\RedirectResponse
+     * @return ProductResource
      */
     public function update(Product $product)
     {
         $this->validateAndSaveProduct($product);
-        return redirect()->route('products.edit', $product);
+
+        return new ProductResource($product);
     }
 
     /**

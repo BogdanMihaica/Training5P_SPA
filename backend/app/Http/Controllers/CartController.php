@@ -2,57 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
     /**
-     * Fetches to display the items that are in the cart
+     * Returns a collection of products that are present in the session cart variable
      * 
-     * @return \Illuminate\Contracts\View\View
+     * @return ProductCollection
      */
     public function index()
     {
-        $cartItems = session('cart');
+        $cartItems = session('cart', []);
         $products = Product::whereIn('id', $cartItems ? array_keys($cartItems) : [])->get();
 
-        return view('cart', compact('products'));
+        return new ProductCollection($products);
     }
 
     /**
-     * Stores an item in the session cart variable
+     * Stores an item in the cart
      * 
-     * @param integer $id
-     * @param integer $quantity
+     * @param Product $product
      * 
-     * @return mixed
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function store(Product $product)
+    public function store(Request $request, Product $product)
     {
-        request()->validate([
+        $request->validate([
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $quantity = request()->input('quantity');
+        $quantity = $request->input('quantity');
         $id = $product->getKey();
 
         $cartItems = session()->get('cart', []);
 
-        if (isset($cartItems[$id])) {
-            return redirect()->back();
+        if (array_key_exists($id, $cartItems)) {
+            return response()->json(['status' => 'failed', 'message' => 'Item already in the cart.'], 500);
         }
 
         $cartItems[$id] = $quantity;
         session()->put('cart', $cartItems);
-
-        return redirect()->route('products.index');
+        
+        return response()->json(['status' => 'ok']);
     }
 
     /**
-     * Removes an item from the session cart variable if it exists
+     * Removes an item from the session cart variable if it exists and returns a status code
      * 
-     * @param integer $id
+     * @param Product $product
      * 
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -61,17 +61,13 @@ class CartController extends Controller
         $id = $product->getKey();
         $cartItems = session('cart');
 
-        if (!session()->has('cart')) {
-            abort(404);
-        }
-
-        if (!array_key_exists($id, $cartItems)) {
-            abort(403);
+        if (!session()->has('cart') || !array_key_exists($id, $cartItems)) {
+            return response()->json(['status' => 'failed','message' => 'Item not present in the cart.'],500);
         }
 
         unset($cartItems[$id]);
         session()->put('cart', $cartItems);
 
-        return redirect()->route('cart.index');
+        return response()->json(['status' => 'ok']);
     }
 }

@@ -1,17 +1,17 @@
 <script>
 import ProductLoader from '@/components/Loaders/ProductLoader.vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
-
+import axios from 'axios';
 
 export default {
 	components : {ProductCard, ProductLoader},
 	data() {
 		return { 
 			products : [],
-			loaded: false
+			loaded: false,
 		}
 	},
-
+	
 	mounted() {
 		this.getProducts();
 	},
@@ -19,18 +19,22 @@ export default {
 	methods:{
 		async getProducts() { 
 
-			await fetch("http://localhost:8000/api/products")
-				.then(res=>res.json())
-				.then(res=>this.products = res.data)
+			axios.get("http://localhost:8000/api/products")
+				.then(response => {
+					this.products = response.data.data;
+				})
+				.catch(error => {
+					console.error("There was an error fetching the products:", error);
+				});
 
 			this.loaded = true;
+		
+		},
 
-			
-		}
+		
 	}
 }
 </script>
-
 <template>
 	<h1 class="text-white text-center text-5xl mb-10">Browse products</h1>
 
@@ -38,14 +42,13 @@ export default {
 		<ProductLoader class="mt-20 mx-auto"></ProductLoader>
 	</div>
 	
-    <div class="w-full flex flex-wrap gap-4">
-		<ProductCard v-for="product in products" 
-			:key="product.id" 
+    <div class="w-full flex flex-wrap gap-4 justify-center">
+		<ProductCard v-for="(product,i) in products" 
+			:key="i" 
 			:title="product.title" 
 			:description="product.description"
 			:image="product.image"
 			:id="product.id"
 		/>
-
     </div>
 </template>
