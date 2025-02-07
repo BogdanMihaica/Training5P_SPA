@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -9,39 +11,29 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     /**
-     * Fetches anddisplays all items from the products table that are not in the shopping cart
+     * Returns the collection of products that are not part of the cart
      * 
-     * @return \Illuminate\Contracts\View\View
+     * @return ProductCollection
      */
     public function index()
     {
 
         $cartItems = session('cart');
-        $products = Product::whereNotIn('id', $cartItems ? array_keys($cartItems) : [])->simplePaginate(8);
+        $products = Product::whereNotIn('id', $cartItems ? array_keys($cartItems) : [])->get();
 
-        return view('welcome', compact('products'));
+        return new ProductCollection($products);
     }
 
     /**
-     * Return the view for publishing a product
-     * 
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function create()
-    {
-        return view('products.product', ['edit' => false]);
-    }
-
-    /**
-     * Return the view for editing a product with a specified id
+     * Get a specific product
 
      * @param Product $product
 
-     * @return \Illuminate\Contracts\View\View
+     * @return ProductResource
      */
     public function edit(Product $product)
     {
-        return view('products.product', ['edit' => true, 'product' => $product]);
+        return new ProductResource($product);
     }
 
     /**

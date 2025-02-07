@@ -46,9 +46,14 @@ export default {
                     <ProductButton :remove="remove"/>
                     <input type="hidden" name="id" :value="id"/>
                     
-                    <select name="" id="quantity">
-
-                    </select>
+                    <div class="flex justify-center items-center mt-1">
+                        <label for="quantity">Select Quantity</label>
+                        <select name="quantity" id="quantity">
+                            <option v-for="i in 10" :key="i" class="text-black">
+                                {{ i }}
+                            </option>
+                        </select>
+                    </div>
                 </form>
             </div>
         </div>
