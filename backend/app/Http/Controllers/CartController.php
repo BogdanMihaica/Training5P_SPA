@@ -48,7 +48,7 @@ class CartController extends Controller
 
         Session::put('cart', $cartItems);
 
-        return response()->json([],200);
+        return response()->json([], 200);
     }
 
     /**

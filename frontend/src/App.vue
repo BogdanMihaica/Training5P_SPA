@@ -17,7 +17,7 @@ export default {
 	</div>
 </template>
 
-<style>
+<style scoped>
 .blob {
 	z-index: -100;
 }
