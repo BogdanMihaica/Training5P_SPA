@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProductCollection;
+use App\Http\Resources\CartProductCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
     /**
      * Returns a collection of products that are present in the session cart variable
      * 
-     * @return ProductCollection
+     * @return CartProductCollection
      */
     public function index()
     {
-        $cartItems = session('cart', []);
+        $cartItems = Session::get('cart', []);
         $products = Product::whereIn('id', $cartItems ? array_keys($cartItems) : [])->get();
 
-        return new ProductCollection($products);
+        return new CartProductCollection($products);
     }
 
     /**
@@ -30,23 +31,24 @@ class CartController extends Controller
      */
     public function store(Request $request, Product $product)
     {
-        $request->validate([
+        $validated = $request->validate([
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $quantity = $request->input('quantity');
+        $quantity = $validated['quantity'];
         $id = $product->getKey();
 
-        $cartItems = session()->get('cart', []);
+        $cartItems = Session::get('cart',[]);
 
         if (array_key_exists($id, $cartItems)) {
-            return response()->json(['status' => 'failed', 'message' => 'Item already in the cart.'], 500);
+            return response()->json(['message' => 'Item already in the cart.'], 500);
         }
 
         $cartItems[$id] = $quantity;
-        session()->put('cart', $cartItems);
-        
-        return response()->json(['status' => 'ok']);
+
+        Session::put('cart', $cartItems);
+
+        return response()->json([],200);
     }
 
     /**
@@ -59,15 +61,15 @@ class CartController extends Controller
     public function destroy(Product $product)
     {
         $id = $product->getKey();
-        $cartItems = session('cart');
+        $cartItems = Session::get('cart');
 
-        if (!session()->has('cart') || !array_key_exists($id, $cartItems)) {
-            return response()->json(['status' => 'failed','message' => 'Item not present in the cart.'],500);
+        if (!Session::has('cart') || !array_key_exists($id, $cartItems)) {
+            return response()->json(['message' => 'Item not present in the cart.'],500);
         }
 
         unset($cartItems[$id]);
-        session()->put('cart', $cartItems);
+        Session::put('cart', $cartItems);
 
-        return response()->json(['status' => 'ok']);
+        return response()->json([],200);
     }
 }

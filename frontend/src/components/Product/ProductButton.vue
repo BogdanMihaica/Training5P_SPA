@@ -1,7 +1,7 @@
 <script>
 export default {
-    props : {
-        remove : {
+    props: {
+        cart: {
             type: Boolean,
             default: false,
         },
@@ -11,19 +11,17 @@ export default {
 
 <template>
     <button :class="{
-        'bg-violet-700 hover:bg-violet-600' : !remove,
-        'bg-red-700 hover:bg-red-600':remove
-        }" 
-        class="w-60 h-10 rounded-lg text-xl cursor-pointer transition-all duration-300"
-        @click.prevent="remove ? $emit('remove') : $emit('add')"
-    >
-        
-        <span v-if="remove">Remove from cart</span>
+        'bg-violet-700 hover:bg-violet-600': !cart,
+        'bg-red-700 hover:bg-red-600': cart
+    }" class="w-60 h-10 rounded-lg text-xl cursor-pointer transition-all duration-300"
+        @click.prevent="cart ? $emit('remove') : $emit('add')">
+
+        <span v-if="cart">Remove from cart</span>
         <span v-else>Add to cart</span>
         <i :class="{
-                'fas fa-plus' : !remove,
-                'fas fa-x' : remove,
+            'fas fa-plus': !cart,
+            'fas fa-x': cart,
         }" class="ml-2 text-lg"></i>
-        
+
     </button>
 </template>

@@ -1,12 +1,13 @@
 <script>
 import ProductLoader from '@/components/Loaders/ProductLoader.vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
+import axios from 'axios';
 
 export default {
-    components : {ProductCard, ProductLoader},
+	components: { ProductCard, ProductLoader },
 	data() {
-		return { 
-			products : [],
+		return {
+			products: [],
 			loaded: false
 		}
 	},
@@ -15,33 +16,45 @@ export default {
 		this.getProducts();
 	},
 
-	methods:{
-		async getProducts() { 
+	methods: {
+		/**
+		 * Async function that fetches the products from the server session variable 'cart'
+		 */
+		async getProducts() {
 
-			await fetch("http://localhost:8000/api/cart")
-				.then(res=>res.json())
-				.then(res=>this.products = res.data)
+			await axios.get("/spa/cart")
+				.then(response => {
+					this.products = response.data.data;
+				})
+				.catch(error => {
+					console.error("There was an error fetching the products:", error);
+				});
 
 			this.loaded = true;
+		},
+
+		/**
+		 * Removes an item from the products array by an index
+		 * 
+		 * @param index 
+		 */
+		removeItemFromList(index) {
+			this.products.splice(index, 1)
 		}
 	}
 }
 </script>
 
 <template>
-    <h1 class="text-white text-center text-5xl mb-10">Your shopping cart</h1>
+	<h1 class="text-white text-center text-5xl mb-10">Your shopping cart</h1>
 
-    <div v-show="!loaded" class="w-full h-500">
+	<div v-show="!loaded" class="w-full h-500">
 		<ProductLoader class="mt-20 mx-auto"></ProductLoader>
 	</div>
 
-    <div class="w-full flex flex-wrap gap-4">
-		<ProductCard v-for="product in products" 
-			:key="product.id" 
-			:title="product.title" 
-			:description="product.description"
-			:image="product.image"
-			:id="product.id"
-		/>
-    </div>
+	<div class="w-full flex flex-wrap gap-4 justify-center">
+		<ProductCard v-for="(product, i) in products" :key="product.id" :title="product.title"
+			:description="product.description" :image="product.image" :id="product.id" @removed="removeItemFromList(i)"
+			:cart="true" :bought-quantity="product.quantity" />
+	</div>
 </template>
