@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -20,10 +21,11 @@ class ProductCollection extends ResourceCollection
                 'title' => $product->title,
                 'description' => $product->description,
                 'price' => $product->price,
-                'image' => $product->image_filename,
+                'image' => getImageUrl($product),
                 'created_at' => $product->created_at->toDateTimeString(),
                 'updated_at' => $product->updated_at->toDateTimeString(),
             ];
         })->toArray();
     }
+
 }

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import ProductButton from './ProductButton.vue';
 import { getCookie } from '@/common/helpers';
+import Swal from 'sweetalert2';
 
 export default {
     components: { ProductButton },
@@ -13,26 +14,11 @@ export default {
     },
 
     props: {
-        id: {
-            type: Number,
-            default: 0
-        },
-        title: {
-            type: String,
-            default: "Lorem ipsum"
-        },
-        image: {
-            type: String,
-            default: "https://picsum.photos/200"
-        },
-        description: {
-            type: String,
-            default: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-        },
-        price: {
-            type: Number,
-            default: 100
-        },
+        id: Number,
+        title: String,
+        image: String,
+        description: String,
+        price: Number,
         cart: {
             type: Boolean,
             default: false
@@ -63,9 +49,19 @@ export default {
                 },
             })
                 .then(() => {
-                    this.$emit('added')
+                    this.$emit('added');
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Successfully added product to the cart!",
+                        icon: "success"
+                    });
                 })
                 .catch(error => {
+                    Swal.fire({
+                        title: "Ugh...",
+                        text: "Something wrong happened.",
+                        icon: "error"
+                    });
                     console.error("There was an error adding the product to the cart:", error);
                 });
         },
@@ -87,9 +83,19 @@ export default {
                 },
             })
                 .then(() => {
-                    this.$emit('removed')
+                    this.$emit('removed');
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Successfully removed product from the cart!",
+                        icon: "success"
+                    });
                 })
                 .catch(error => {
+                    Swal.fire({
+                        title: "Ugh...",
+                        text: "Something wrong happened.",
+                        icon: "error"
+                    });
                     console.error("There was an error removing the product from the cart:", error);
                 });
         }
@@ -104,7 +110,8 @@ export default {
             <div class="flex flex-col h-full auto items-center justify-between space-y-4">
 
                 <div class="w-full flex justify-center mt-1 overflow-hidden">
-                    <img :src="image" alt="Product image" class="w-60 rounded-lg border-2 border-stone-600">
+                    <img :src="image ?? 'https://placehold.co/200'" alt="Product image"
+                        class="w-60 rounded-lg border-2 border-stone-600">
                 </div>
 
                 <h2 class="text-2xl">{{ title }}</h2>

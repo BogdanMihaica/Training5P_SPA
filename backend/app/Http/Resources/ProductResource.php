@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +20,7 @@ class ProductResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
-            'image' => $this->image_filename,
+            'image' => getImageUrl($this),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

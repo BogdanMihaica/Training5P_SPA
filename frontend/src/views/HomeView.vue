@@ -54,7 +54,7 @@ export default {
 
 	<div class="w-full flex flex-wrap gap-4 justify-center">
 		<ProductCard v-for="(product, i) in products" :key="product.id" :title="product.title"
-			:description="product.description" :image="product.image" :id="product.id" :index="i"
+			:description="product.description" :image="product.image" :id="product.id" :index="i" :price="product.price"
 			@added="removeItemFromList(i)" />
 	</div>
 </template>
