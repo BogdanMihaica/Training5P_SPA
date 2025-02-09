@@ -27,13 +27,14 @@ export default {
                     'accept': 'application/json',
                 },
             })
-                .then(() => {
-                    this.$emit('added');
+                .then((res) => {
                     Swal.fire({
                         title: "Success!",
                         text: "Successfully logged in!",
                         icon: "success"
                     });
+                    console.log(res.data);
+
                 })
                 .catch(error => {
                     Swal.fire({
@@ -48,7 +49,7 @@ export default {
 };
 </script>
 <template>
-    <div class="min-h-screen flex justify-center items-center text-white">
+    <div class="h-150 flex justify-center items-center text-white">
         <div class="bg-neutral-800 p-8 rounded-2xl shadow-lg w-96 border-1 border-violet-600">
             <h2 class="text-2xl font-semibold text-center text-white mb-6">Login</h2>
             <form @submit.prevent="handleLogin">
