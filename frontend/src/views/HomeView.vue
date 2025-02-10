@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export default {
 	components: { ProductCard, ProductLoader },
+
 	data() {
 		return {
 			products: [],
@@ -17,6 +18,7 @@ export default {
 	},
 
 	methods: {
+
 		/**
 		 * Async function that fetches for the products that are not in the cart
 		 */

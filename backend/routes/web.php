@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/spa')->group(function () {
@@ -23,8 +24,12 @@ Route::prefix('/spa')->group(function () {
     
     Route::controller(UserController::class)->group(function(){
         Route::post('/login', 'store');
+        
         Route::middleware('auth:sanctum')->group(function(){
             Route::post('/logout', 'destroy');
+            Route::get('/user',function(){
+                return Auth::user();
+            });
         });
     });
 });

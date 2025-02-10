@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export default {
 	components: { ProductCard, ProductLoader },
+
 	data() {
 		return {
 			products: [],
