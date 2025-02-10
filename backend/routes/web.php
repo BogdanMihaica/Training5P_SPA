@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,12 @@ Route::prefix('/spa')->group(function () {
     Route::controller(ProductController::class)->group(function(){
         Route::get('/products','index');
         Route::get('/products/{product}','edit');
+        
+        Route::middleware(['auth:sanctum'])->group(function(){
+            Route::patch('/products/{product}', 'update');
+            Route::post('/products/{product}', 'store');
+            Route::delete('/products/{product}', 'destroy');
+        });
     });
 
     Route::controller(CartController::class)->group(function(){
@@ -18,13 +25,18 @@ Route::prefix('/spa')->group(function () {
         Route::post('/cart/{product}','store');
     });
 
+    Route::controller(OrderController::class)->group(function(){
+        Route::get('/orders', 'index');
+        Route::get('/order/{order}', 'show');
+        Route::post('/orders','store');
+    });
     Route::get('/csrf-token', function () {
         return response()->json(['csrf_token' => csrf_token()]);
     });
     
     Route::controller(UserController::class)->group(function(){
         Route::post('/login', 'store');
-        
+
         Route::middleware('auth:sanctum')->group(function(){
             Route::post('/logout', 'destroy');
             Route::get('/user',function(){

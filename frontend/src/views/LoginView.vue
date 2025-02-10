@@ -1,7 +1,7 @@
 <script>
 import { } from '@/common/helpers';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { useAuthStore } from '@/stores/authStore';
+
 
 export default {
     data() {
@@ -10,41 +10,15 @@ export default {
             password: ''
         };
     },
+
     methods: {
         /**
          * Handles the login form submission
          */
         async handleLogin() {
-            const body = {
-                email: this.email,
-                password: this.password
-            };
+            let authStore = useAuthStore();
 
-            await axios.get('/sanctum/csrf-cookie');
-
-            await axios.post(`/spa/login`, body, {
-                headers: {
-                    'accept': 'application/json',
-                },
-            }).then((res) => {
-                Swal.fire({
-                    title: "Success",
-                    text: "Successfully logged in!",
-                    icon: "success"
-                });
-
-                let token = res.data;
-
-                localStorage.setItem('token', token);
-            }).catch(error => {
-                Swal.fire({
-                    title: "Ugh...",
-                    text: error.response.data.message,
-                    icon: "error"
-                });
-                console.log(error.response);
-
-            });
+            authStore.login(this.email, this.password)
         }
     }
 };
@@ -69,7 +43,7 @@ export default {
                 <div class="flex items-center justify-between">
                     <button type="submit"
                         class="cursor-pointer w-full py-2 px-4 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500">
-                        {{ $t('login') }}
+                        {{ $t('submit') }}
                     </button>
                 </div>
             </form>

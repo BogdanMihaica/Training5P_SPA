@@ -113,13 +113,13 @@ export default {
 
                 <h2 class="text-2xl">{{ title }}</h2>
                 <h3 class="text-xs mx-5">{{ description }}</h3>
-                <h2 class="text-2xl" v-show="cart">Quantity: {{ boughtQuantity }}</h2>
+                <h2 class="text-2xl" v-show="cart"> {{ $t('quantity') + ": " + boughtQuantity }}</h2>
                 <h2 class="text-3xl text-violet-300">${{ price }}</h2>
 
                 <div class="flex justify-center items-center mt-1 flex-col">
                     <ProductButton :cart="cart" @add="addToCart(id, quantity)" @remove="removeFromCart(id)" />
 
-                    <label :for="`quantity-${id}`" v-show="!cart">Select Quantity</label>
+                    <label :for="`quantity-${id}`" v-show="!cart">{{ $t('selectQuantity') }}</label>
 
                     <select :id="`quantity-${id}`" v-model="quantity" v-show="!cart">
                         <option v-for="i in 10" :key="i" class="text-black">

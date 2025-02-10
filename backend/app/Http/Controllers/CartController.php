@@ -41,7 +41,7 @@ class CartController extends Controller
         $cartItems = Session::get('cart',[]);
 
         if (array_key_exists($id, $cartItems)) {
-            return response()->json(['message' => 'Item already in the cart.'], 500);
+            return response()->json(['message' => 'Item already in the cart.'], 401);
         }
 
         $cartItems[$id] = $quantity;
@@ -64,7 +64,7 @@ class CartController extends Controller
         $cartItems = Session::get('cart');
 
         if (!Session::has('cart') || !array_key_exists($id, $cartItems)) {
-            return response()->json(['message' => 'Item not present in the cart.'], 401);
+            return response()->json(['message' => 'Item not present in the cart.']);
         }
 
         unset($cartItems[$id]);

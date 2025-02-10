@@ -3,5 +3,21 @@
     "email" : "Email",
     "password" : "Password",
     "enterEmail" : "Enter your email",
-    "enterPassword": "Enter your password"
+    "enterPassword" : "Enter your password",
+    "yourShoppingCart" : "Your shopping cart",
+    "browse" : "Browse products",
+    "home" : "Home",
+    "products" : "Products",
+    "orders" : "Orders",
+    "logout" : "Logout",
+    "upload" : "Upload",
+    "cart" : "Cart",
+    "removeFromCart" : "Remove from cart",
+    "quantity" : "Quantity",
+    "addToCart" : "Add to cart",
+    "selectQuantity" : "Select quantity",
+    "checkout" : "Checkout",
+    "enterName" : "Enter your name",
+    "name" : "Name",
+    "submit" : "Submit"
 }

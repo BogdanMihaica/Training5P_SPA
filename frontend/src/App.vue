@@ -1,12 +1,19 @@
 <script>
-
 import { RouterView } from 'vue-router'
 import NavbarComponent from './components/Navbar/NavbarComponent.vue';
+import { useAuthStore } from './stores/authStore';
+
 export default {
+	setup() {
+		let authStore = useAuthStore();
+
+		return {
+			authStore,
+		};
+	},
 	components: { RouterView, NavbarComponent },
 }
 </script>
-
 <template>
 	<NavbarComponent class="z-100" />
 	<div class="z-0 w-full fixed blob left-100 top-0">

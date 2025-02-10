@@ -16,8 +16,8 @@ export default {
     }" class="w-60 h-10 rounded-lg text-xl cursor-pointer transition-all duration-300"
         @click.prevent="cart ? $emit('remove') : $emit('add')">
 
-        <span v-if="cart">Remove from cart</span>
-        <span v-else>Add to cart</span>
+        <span v-if="cart">{{ $t('removeFromCart') }}</span>
+        <span v-else>{{ $t('addToCart') }}</span>
         <i :class="{
             'fas fa-plus': !cart,
             'fas fa-x': cart,

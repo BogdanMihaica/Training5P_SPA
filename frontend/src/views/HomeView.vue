@@ -48,7 +48,7 @@ export default {
 }
 </script>
 <template>
-	<h1 class="text-white text-center text-5xl mb-10">Browse products</h1>
+	<h1 class="text-white text-center text-5xl mb-10">{{ $t('browse') }}</h1>
 
 	<div v-show="!loaded" class="w-full h-500">
 		<ProductLoader class="mt-20 mx-auto"></ProductLoader>

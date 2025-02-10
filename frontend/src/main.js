@@ -18,13 +18,15 @@ const i18n = createI18n({
 });
 
 const app = createApp(App)
+const pinia = createPinia();
 
 axios.defaults.withCredentials=true;
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withXSRFToken = true;
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('auth_token')}`;
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
 app.use(i18n)
 
-app.mount('#app')
+app.mount('#app');

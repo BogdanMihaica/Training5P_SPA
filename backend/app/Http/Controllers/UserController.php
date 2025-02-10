@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -29,7 +25,11 @@ class UserController extends Controller
             return response()->json(['message' => 'Credentials do not match'], 401);
         }
         
-        return $request->user()->createToken('API TOKEN')->plainTextToken;
+        $token = $request->user()->createToken('API TOKEN')->plainTextToken;
+
+        return response()->json([
+            'token' => $token
+        ]);
     }
 
     /**
@@ -39,12 +39,8 @@ class UserController extends Controller
      */
     public function destroy()
     {
-        if (session('user')) {
-            Session::remove('user');
+        Auth::guard('web')->logout();
 
-            return response()->json([], 200);
-        } else {
-            return response()->json([], 404);
-        }
+        return response()->json();
     }
 }

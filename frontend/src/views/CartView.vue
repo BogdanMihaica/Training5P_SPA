@@ -9,7 +9,8 @@ export default {
 	data() {
 		return {
 			products: [],
-			loaded: false
+			loaded: false,
+			checkoutOpen: false
 		}
 	},
 
@@ -41,13 +42,20 @@ export default {
 		 */
 		removeItemFromList(index) {
 			this.products.splice(index, 1)
+		},
+
+		/**
+		 * Toggles the value of checkoutOpen
+		 */
+		toggleCheckout() {
+			this.checkoutOpen = !this.checkoutOpen;
 		}
 	}
 }
 </script>
 
 <template>
-	<h1 class="text-white text-center text-5xl mb-10">Your shopping cart</h1>
+	<h1 class="text-white text-center text-5xl mb-10">{{ $t('yourShoppingCart') }}</h1>
 
 	<div v-show="!loaded" class="w-full h-500">
 		<ProductLoader class="mt-20 mx-auto"></ProductLoader>
@@ -57,5 +65,44 @@ export default {
 		<ProductCard v-for="(product, i) in products" :key="product.id" :title="product.title"
 			:description="product.description" :image="product.image" :id="product.id" :price="product.price"
 			@removed="removeItemFromList(i)" :cart="true" :bought-quantity="product.quantity" />
+	</div>
+
+	<div class="my-6 w-full flex justify-center items-center flex-col">
+		<button class=" cursor-pointer w-40 py-2 px-4 bg-violet-600 text-white rounded-md 
+			hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500" v-if="!checkoutOpen"
+			@click.prevent="toggleCheckout()">
+			{{ $t('checkout') }}
+		</button>
+		<div class="w-100 h-90 bg-neutral-800 border-1 border-violet-600 flex justify-center items-center flex-col rounded-lg"
+			v-else>
+			<div class="w-full flex flex-row-reverse">
+				<button class="cursor-pointer w-40 text-white" @click.prevent="toggleCheckout()">
+					<i class="fas fa-x"></i>
+				</button>
+			</div>
+			<h2 class="text-2xl font-semibold text-center text-white mb-6">{{ $t('checkout') }}</h2>
+			<form @submit.prevent="handleLogin" class="w-[70%]">
+				<div class="mb-4">
+					<label for="customer-email" class="block text-sm font-medium text-gray-300">
+						{{ $t('email') }}
+					</label>
+					<input type="email" id="customer-email" v-model="email"
+						class="text-white w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+						:placeholder="$t('enterEmail')" />
+				</div>
+				<div class="mb-6">
+					<label for="name" class="block text-sm font-medium text-gray-300">{{ $t('name') }}</label>
+					<input type="text" id="name" v-model="name"
+						class="text-white w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+						:placeholder="$t('enterName')" />
+				</div>
+				<div class="flex items-center justify-between">
+					<button type="submit"
+						class="cursor-pointer w-full py-2 px-4 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500">
+						{{ $t('login') }}
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </template>
