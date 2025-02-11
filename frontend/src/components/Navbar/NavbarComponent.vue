@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/authStore';
 import NavbarLink from './NavbarLink.vue';
 import { mapStores } from 'pinia';
+import axios from 'axios';
 
 export default {
     components: { NavbarLink },
@@ -13,11 +14,29 @@ export default {
     },
 
     methods: {
+        /**
+         * Handles the logout of the user
+         */
         async handleLogout() {
             await this.authStore.logout();
         },
+
+        /**
+         * Checks if the user is authenticated
+         */
         isAuthenticated() {
             return this.authStore.isAuthenticated;
+        },
+
+        /**
+         * Handles the locale change
+         * 
+         * @param language 
+         */
+        async handleLocaleChange(language) {
+            this.$i18n.locale = language.toUpperCase();
+
+            await axios.get(`/spa/change-locale?lang=${language}`);
         }
     },
 
@@ -29,7 +48,7 @@ export default {
 
 <template>
     <div
-        class="top-0 w-full h-15 bg-gradient-to-r from-violet-500 to-violet-600 rounded-b-2xl fixed flex justify-start items-center">
+        class="top-0 w-full h-15 bg-gradient-to-r from-violet-500 to-violet-600 rounded-b-2xl fixed flex justify-between items-center">
         <div class="flex gap-5">
             <NavbarLink :route="{ 'name': 'home' }" icon="fas fa-house" class="first:ml-5">{{ $t('home') }}</NavbarLink>
             <NavbarLink :route="{ 'name': 'cart' }" icon="fas fa-cart-shopping">{{ $t('cart') }}</NavbarLink>
@@ -51,7 +70,17 @@ export default {
                     {{ $t('logout') }}
                 </button>
             </span>
+        </div>
 
+        <div class="mr-10 flex gap-2">
+            <button class="cursor-pointer px-3 bg-violet-300 text-black rounded-sm hover:bg-violet-400"
+                @click.prevent="handleLocaleChange('en')">
+                EN
+            </button>
+            <button class="cursor-pointer px-3 bg-violet-300 text-black rounded-sm hover:bg-violet-400"
+                @click.prevent="handleLocaleChange('ro')">
+                RO
+            </button>
         </div>
     </div>
 </template>

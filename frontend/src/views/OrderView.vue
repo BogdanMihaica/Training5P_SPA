@@ -48,7 +48,7 @@ export default {
             let total = 0;
 
             if (this.products) {
-                this.products.forEach(product => total += product.price * product.pivot.quantity);
+                this.products.forEach(product => total += (product.price * product.pivot.quantity));
             }
 
             return total;

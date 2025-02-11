@@ -6,6 +6,7 @@ use App\Http\Resources\CartProductsCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -23,7 +24,7 @@ class CartController extends Controller
     }
 
     /**
-     * Stores an item in the cart
+     * Stores an item in the cart if it doesn't already exist
      * 
      * @param Product $product
      * 
@@ -35,20 +36,24 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $quantity = $validated['quantity'];
         $id = $product->getKey();
 
         $cartItems = Session::get('cart',[]);
-
-        if (array_key_exists($id, $cartItems)) {
-            return response()->json(['message' => 'Item already in the cart.'], 401);
-        }
-
+        
+        $quantity = $validated['quantity'];
+        
+        Validator::make(['cart' => $cartItems], 
+                        ['cart' => 
+                        function ($attribute, $value, $fail) use ($cartItems, $id) {
+                            if (array_key_exists($id, $cartItems)) {
+                                $fail('Item already in the cart.');
+                            }
+                        }])->validate();
+        
         $cartItems[$id] = $quantity;
-
         Session::put('cart', $cartItems);
 
-        return response()->json([], 200);
+        return response()->json();
     }
 
     /**
@@ -63,9 +68,14 @@ class CartController extends Controller
         $id = $product->getKey();
         $cartItems = Session::get('cart');
 
-        if (!Session::has('cart') || !array_key_exists($id, $cartItems)) {
-            return response()->json(['message' => 'Item not present in the cart.']);
-        }
+        Validator::make(['cart' => $cartItems], 
+                        ['cart' => 
+                        function ($attribute, $value, $fail) use ($cartItems, $id) {
+                            if (!Session::has('cart') || !array_key_exists($id, $cartItems)) {
+                                $fail('Item not present in the cart.');
+                            }
+                        }])->validate();
+        
 
         unset($cartItems[$id]);
         Session::put('cart', $cartItems);

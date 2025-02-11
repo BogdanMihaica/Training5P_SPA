@@ -16,8 +16,8 @@ Route::middleware([SetLocaleMiddleware::class])->group(function () {
             Route::middleware(['auth:sanctum'])->group(function(){
                 Route::get('/products/all', 'all');
                 Route::get('/products/{product}','edit');
-                Route::patch('/products/{product}', 'update');
-                Route::post('/products/{product}', 'store');
+                Route::put('/products/{product}', 'update');
+                Route::post('/products', 'store');
                 Route::delete('/products/{product}', 'destroy');
             });
         });
@@ -50,6 +50,10 @@ Route::middleware([SetLocaleMiddleware::class])->group(function () {
                     return Auth::user();
                 });
             });
+        });
+
+        Route::get('/change-locale', function(){
+            return response()->json();
         });
     });
 });

@@ -1,10 +1,10 @@
 <script>
-import ProductLoader from '@/components/Loaders/ProductLoader.vue';
+import SquaresLoader from '@/components/Loaders/SquaresLoader.vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import axios from 'axios';
 
 export default {
-	components: { ProductCard, ProductLoader },
+	components: { ProductCard, SquaresLoader },
 
 	data() {
 		return {
@@ -51,7 +51,7 @@ export default {
 	<h1 class="text-white text-center text-5xl mb-10">{{ $t('browse') }}</h1>
 
 	<div v-show="!loaded" class="w-full h-500">
-		<ProductLoader class="mt-20 mx-auto"></ProductLoader>
+		<SquaresLoader class="mt-20 mx-auto" />
 	</div>
 
 	<div class="w-full flex flex-wrap gap-4 justify-center">

@@ -21,7 +21,6 @@ export default {
          */
         async handleLogin() {
             let authStore = useAuthStore();
-
             this.errors = await authStore.login(this.email, this.password)
         }
     }
@@ -54,6 +53,7 @@ export default {
                         {{ $t('login') }}
                     </button>
                 </div>
+                <ErrorMessage :error="errors.credentials" />
             </form>
         </div>
     </div>

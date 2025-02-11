@@ -1,17 +1,25 @@
+<!-- eslint-disable no-unused-vars -->
 <script>
+import ErrorMessage from '@/components/Error/ErrorMessage.vue';
+import SquaresLoader from '@/components/Loaders/SquaresLoader.vue';
+import router from '@/router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default {
+    components: { ErrorMessage, SquaresLoader },
+
     data() {
         return {
             id: 0,
             title: "",
             description: "",
-            price: 0,
+            price: "",
             currentImageUrl: "",
             image: null,
-            edit: false
+            edit: false,
+            errors: {},
+            loaded: false
         }
     },
 
@@ -36,22 +44,19 @@ export default {
                     })
                     .catch(err => console.log(err));
             }
-        },
-
-        async handleUpload() {
-            console.log("uploading fsr");
+            this.loaded = true;
         },
 
         /**
-         * Handles the process of patching the active element from the database
+         * Handles the process of patching or posting the active element from the database
          */
-        async handleEdit() {
-
-
+        async handleSubmit() {
             let formData = new FormData();
+
             formData.append("title", this.title);
             formData.append("description", this.description);
             formData.append("price", this.price);
+
 
             if (this.image) {
                 formData.append("image", this.image);
@@ -59,12 +64,14 @@ export default {
 
             await axios.get("/sanctum/csrf-cookie");
 
-            await axios.patch(`/spa/products/${this.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-                .then((res) => {
+            if (this.edit) {
+                formData.append("_method", "PUT");
+
+                await axios.post(`/spa/products/${this.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then((res) => {
                     console.log(res);
 
                     Swal.fire({
@@ -72,8 +79,26 @@ export default {
                         text: "Product updated succesfully!",
                         icon: "success"
                     });
-                })
-                .catch(err => console.log(err))
+                }).catch((error) => {
+                    this.errors = error.response.data.errors
+                });
+            } else {
+                await axios.post(`/spa/products`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then((res) => {
+                    console.log(res);
+
+                    Swal.fire({
+                        title: "Success",
+                        text: "Product uploaded succesfully!",
+                        icon: "success"
+                    });
+                }).catch((error) => {
+                    this.errors = error.response.data.errors;
+                });
+            }
         },
 
         /**
@@ -82,29 +107,31 @@ export default {
          * @param e 
          */
         handleImageChange(e) {
-            this.image = e.target.files[0]
+            this.image = e.target.files[0];
         }
     },
 
     mounted() {
         this.getProduct();
-    }
-
+    },
 }
 </script>
 
 <template>
     <div class="h-200 flex justify-center items-center text-white">
-        <div class="bg-neutral-800 p-8 rounded-2xl shadow-lg w-128 border-1 border-violet-600">
+        <div v-if="!loaded" class="w-full h-200">
+            <SquaresLoader class="mt-20 mx-auto" />
+        </div>
+        <div v-else class="bg-neutral-800 p-8 rounded-2xl shadow-lg w-128 border-1 border-violet-600">
             <h2 class="text-2xl font-semibold text-center text-white mb-6">
                 {{ edit ? $t('editProduct') : $t('upload') }}
             </h2>
 
-            <div class="w-full flex justify-center mb-2">
+            <div class="w-full flex justify-center mb-2" v-if="edit">
                 <img :src="currentImageUrl" alt="Product image" class="h-50">
             </div>
 
-            <form @submit.prevent="edit ? handleEdit() : handleUpload()">
+            <form @submit.prevent="handleSubmit()">
                 <div class="mb-4">
                     <label for="title" class="block text-sm font-medium text-gray-300">
                         {{ $t('title') }}
@@ -112,6 +139,7 @@ export default {
                     <input type="text" id="title" v-model="title"
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                         :placeholder="$t('enterTitle')" />
+                    <ErrorMessage :error="errors.title" />
                 </div>
 
                 <div class="mb-4">
@@ -122,6 +150,7 @@ export default {
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none"
                         :placeholder="$t('enterDescription')" rows="6">
                     </textarea>
+                    <ErrorMessage :error="errors.description" />
                 </div>
 
                 <div class="mb-4">
@@ -131,6 +160,7 @@ export default {
                     <input type="text" id="price" v-model="price"
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                         :placeholder="$t('enterPrice')" />
+                    <ErrorMessage :error="errors.price" />
                 </div>
 
                 <div class="mb-4">
@@ -140,6 +170,7 @@ export default {
                     <input
                         class="mt-2 block w-full h-12text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none"
                         type="file" id="image" @change="handleImageChange($event)" />
+                    <ErrorMessage :error="errors.image" />
                 </div>
 
                 <div class="flex items-center justify-between">

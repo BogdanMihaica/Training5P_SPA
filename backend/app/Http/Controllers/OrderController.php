@@ -9,6 +9,7 @@ use App\Models\OrderProduct;
 use App\Notifications\OrderSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -38,13 +39,16 @@ class OrderController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'max:100'],
             'email' => ['required', 'email'],
-            'cart' => function ($attribute, $value, $fail) use ($cartItems) {
-                if (!$cartItems || count($cartItems) === 0) {
-                    $fail('The cart is empty.');
-                }
-            }
         ]);
 
+        Validator::make(['cart' => $cartItems], 
+                        ['cart' => 
+                            function ($attribute, $value, $fail) use ($cartItems) {
+                                if (!$cartItems || count($cartItems) === 0) {
+                                    $fail('The cart is empty.');
+                                }
+                        }])->validate();
+        
         $order = new Order();
         $order->customer_name = $validated['name'];
         $order->customer_email = $validated['email'];

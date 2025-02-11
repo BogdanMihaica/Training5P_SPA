@@ -1,11 +1,12 @@
 <script>
-import ProductLoader from '@/components/Loaders/ProductLoader.vue';
+import ErrorMessage from '@/components/Error/ErrorMessage.vue';
+import SquaresLoader from '@/components/Loaders/SquaresLoader.vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default {
-	components: { ProductCard, ProductLoader },
+	components: { ProductCard, SquaresLoader, ErrorMessage },
 
 	data() {
 		return {
@@ -13,7 +14,8 @@ export default {
 			loaded: false,
 			checkoutOpen: false,
 			name: '',
-			email: ''
+			email: '',
+			errors: {}
 		}
 	},
 
@@ -71,11 +73,7 @@ export default {
 
 				this.products = [];
 			}).catch(error => {
-				Swal.fire({
-					title: "Ugh...",
-					text: "Something wrong happened",
-					icon: "error"
-				});
+				this.errors = error.response.data.errors
 				console.log(error.response);
 			});
 
@@ -88,7 +86,7 @@ export default {
 	<h1 class="text-white text-center text-5xl mb-10">{{ $t('yourShoppingCart') }}</h1>
 
 	<div v-show="!loaded" class="w-full h-500">
-		<ProductLoader class="mt-20 mx-auto"></ProductLoader>
+		<SquaresLoader class="mt-20 mx-auto"></SquaresLoader>
 	</div>
 
 	<div class="w-full flex flex-wrap gap-4 justify-center">
@@ -104,7 +102,7 @@ export default {
 			{{ $t('checkout') }}
 		</button>
 
-		<div class="w-100 h-90 bg-neutral-800 border-1 border-violet-600 flex justify-center items-center flex-col rounded-lg"
+		<div class="w-100 h-auto py-5 bg-neutral-800 border-1 border-violet-600 flex justify-center items-center flex-col rounded-lg"
 			v-else>
 
 			<div class="w-full flex flex-row-reverse">
@@ -123,6 +121,7 @@ export default {
 					<input type="email" id="customer-email" v-model="email"
 						class="text-white w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
 						:placeholder="$t('enterEmail')" />
+					<ErrorMessage :error="errors.email" />
 				</div>
 
 				<div class="mb-6">
@@ -130,6 +129,7 @@ export default {
 					<input type="text" id="name" v-model="name"
 						class="text-white w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
 						:placeholder="$t('enterName')" />
+					<ErrorMessage :error="errors.name" />
 				</div>
 
 				<div class="flex items-center justify-between">
@@ -138,6 +138,7 @@ export default {
 						{{ $t('submit') }}
 					</button>
 				</div>
+				<ErrorMessage :error="errors.cart" />
 			</form>
 		</div>
 	</div>

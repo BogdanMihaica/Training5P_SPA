@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\CredentialsMatch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -21,10 +23,12 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
         
-        if (!Auth::attempt($attributes)){
-            return response()->json(['message' => 'Credentials do not match'], 401);
-        }
-        
+        $loggedIn = Auth::attempt($attributes);
+
+        Validator::make(['credentials' => $loggedIn], [
+            'credentials' => ['accepted'],
+        ],['accepted' => 'Credentials don\'t match'])->validate();
+
         $token = $request->user()->createToken('API TOKEN')->plainTextToken;
 
         return response()->json([

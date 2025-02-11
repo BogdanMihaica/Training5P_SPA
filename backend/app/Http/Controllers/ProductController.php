@@ -7,6 +7,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class ProductController extends Controller
 {
@@ -69,21 +70,23 @@ class ProductController extends Controller
      * 
      * @return ProductResource
      */
-    public function store()
+    public function store(Request $request)
     {
-        $product = $this->validateAndSaveProduct(new Product());
+        $product = new Product();
+        $this->validateAndSaveProduct($product, true);
 
         return new ProductResource($product);
     }
+
 
     /**
      * Updates a product from the database and returns it as response
      * 
      * @return ProductResource
      */
-    public function update(Request $request, Product $product)
+    public function update(Product $product)
     {
-        $this->validateAndSaveProduct($product);
+        $this->validateAndSaveProduct($product, false);
 
         return new ProductResource($product);
     }
@@ -95,32 +98,38 @@ class ProductController extends Controller
      * 
      * @return Product
      */
-    private function validateAndSaveProduct(Product $product)
+    private function validateAndSaveProduct(Product $product, bool $newProduct)
     {
         $validated = request()->validate([
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'title' => ['required', 'max:50'],
             'description' => ['required', 'max:300'],
             'price' => ['required', 'numeric', 'min:1'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 
-        $product->fill($validated);
-        $product->save();
+        $product->title = $validated['title'];
+        $product->description = $validated['description'];
+        $product->price = $validated['price'];
 
+        if( $newProduct ) {
+            $product->save();
+        }
+        
         if (request()->hasFile('image')) {
             $image = request()->file('image');
             $fileName = $product->getKey() . '.' . $image->extension();
 
             if ($product->image_filename) {
-                Storage::disk('public')->delete('products' . DIRECTORY_SEPARATOR . $product->image_filename);
+                Storage::disk('public')->delete('products/' . $product->image_filename);
             }
 
             $image->storeAs('products', $fileName, 'public');
-
             $product->image_filename = $fileName;
-            $product->save();
         }
+
+        $product->save();
 
         return $product;
     }
+
 }

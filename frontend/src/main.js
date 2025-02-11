@@ -23,7 +23,7 @@ const pinia = createPinia();
 axios.defaults.withCredentials=true;
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withXSRFToken = true;
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('auth_token')}`;
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
 app.use(pinia)
 app.use(router)

@@ -105,12 +105,11 @@ export default {
                     </td>
                     <td>
                         <div class="flex flex-col justify-center items-center w-full gap-2">
-                            <button
-                                class="px-4 py-1 bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600 focus:ring-blue-400 focus:ring-1">
-                                <RouterLink :to="{ name: 'product', params: { id: product.id } }">
-                                    {{ $t('edit') }}
-                                </RouterLink>
-                            </button>
+                            <RouterLink :to="{ name: 'product', params: { id: product.id } }" class="px-4 py-1 bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600 
+                                focus:ring-blue-400 focus:ring-1">
+                                {{ $t('edit') }}
+                            </RouterLink>
+
 
                             <button class="px-4 py-1 bg-red-500 rounded-lg cursor-pointer hover:bg-red-600
                                 focus:ring-red-400 focus:ring-1" @click.prevent="handleDelete(product.id, i)">

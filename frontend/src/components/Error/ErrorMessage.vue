@@ -1,8 +1,6 @@
 <script>
 export default {
-    props: {
-        error: String
-    }
+    props: ['error']
 }
 </script>
 
