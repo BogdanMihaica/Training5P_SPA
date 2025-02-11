@@ -1,4 +1,5 @@
 <script>
+import router from '@/router';
 import axios from 'axios';
 
 export default {
@@ -7,7 +8,8 @@ export default {
             products: [],
             customerName: "",
             customerEmail: "",
-            createdAt: ""
+            createdAt: "",
+            loaded: false
         }
     },
 
@@ -29,6 +31,12 @@ export default {
                     this.createdAt = res.data.created_at;
                 })
                 .catch(err => console.log(err))
+
+            if (!this.products.length) {
+                router.push({ name: "notFound" });
+            }
+
+            this.loaded = true;
         },
 
         /**
@@ -43,7 +51,7 @@ export default {
                 this.products.forEach(product => total += product.price * product.pivot.quantity);
             }
 
-            return total
+            return total;
         }
     },
 
@@ -54,7 +62,7 @@ export default {
 </script>
 
 <template>
-    <div class="text-white w-full">
+    <div class="text-white w-full" v-show="loaded">
         <h1 class="text-5xl text-center"> {{ $t("order") + " #" + $route.params.id }}</h1>
 
         <div class="text-xl mb-10">
@@ -96,7 +104,7 @@ export default {
                             {{ product.id }}
                         </td>
                         <td>
-                            <img class="h-20 rounded-lg" :src="product.image" alt="Product image">
+                            <img class="h-20 rounded-lg" :src="product.image_url" alt="Product image">
                         </td>
                         <td>
                             {{ product.title }}

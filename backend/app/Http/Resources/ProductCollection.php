@@ -21,7 +21,7 @@ class ProductCollection extends ResourceCollection
                 'title' => $product->title,
                 'description' => $product->description,
                 'price' => $product->price,
-                'image' => getImageUrl($product),
+                'image_url' => getImageUrl($product),
                 'created_at' => $product->created_at->toDateTimeString(),
                 'updated_at' => $product->updated_at->toDateTimeString(),
             ];

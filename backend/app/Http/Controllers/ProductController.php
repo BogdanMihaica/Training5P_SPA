@@ -81,7 +81,7 @@ class ProductController extends Controller
      * 
      * @return ProductResource
      */
-    public function update(Product $product)
+    public function update(Request $request, Product $product)
     {
         $this->validateAndSaveProduct($product);
 

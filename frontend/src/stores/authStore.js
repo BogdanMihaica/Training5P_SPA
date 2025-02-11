@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth',
 
 		actions: {
 			/**
-			 * Requests the server for the login of the user and updates the stored variables accordingly
+			 * Requests the server for the login of the user and updates the stored variables accordingly and returns the errors if any
 			 * 
 			 * @param {Object} userParam 
 			 * @param {string} token 
@@ -22,6 +22,8 @@ export const useAuthStore = defineStore('auth',
 					email: email,
 					password: password
 				};
+
+				let errors = {};
 
 				await axios.get('/sanctum/csrf-cookie');
 
@@ -37,13 +39,10 @@ export const useAuthStore = defineStore('auth',
 
 					router.push({ name: 'home' });
 				}).catch(error => {
-					Swal.fire({
-						title: "Ugh...",
-						text: error.response.data.message,
-						icon: "error"
-					});
-					console.log(error.response);
+					errors = error.response.data.errors;
 				});
+
+				return errors;
 			},
 
 			/**

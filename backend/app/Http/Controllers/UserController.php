@@ -18,9 +18,9 @@ class UserController extends Controller
     {
         $attributes = $request->validate([
             'email' => ['required'],
-            'password' => ['required']
+            'password' => ['required'],
         ]);
-    
+        
         if (!Auth::attempt($attributes)){
             return response()->json(['message' => 'Credentials do not match'], 401);
         }

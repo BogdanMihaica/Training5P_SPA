@@ -10,18 +10,13 @@ use Illuminate\Notifications\Notification;
 class OrderSent extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    protected $username;
-    protected $email;
     protected $order;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($email, $username, $order)
+    public function __construct($order)
     {
-        $this->username = $username;
-        $this->email = $email;
         $this->order = $order;
     }
 
@@ -43,8 +38,8 @@ class OrderSent extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->view('mail.order-posted', [
-                'username' => $this->username,
-                'email' => $this->email,
+                'username' => $this->order->customer_name,
+                'email' => $this->order->customer_email,
                 'order' => $this->order
             ]);
     }

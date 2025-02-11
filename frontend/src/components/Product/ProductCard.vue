@@ -16,7 +16,7 @@ export default {
     props: {
         id: Number,
         title: String,
-        image: String,
+        imageUrl: String,
         description: String,
         price: Number,
         cart: {
@@ -107,7 +107,7 @@ export default {
             <div class="flex flex-col h-full auto items-center justify-between space-y-4">
 
                 <div class="w-full flex justify-center mt-1 overflow-hidden">
-                    <img :src="image ?? 'https://placehold.co/200'" alt="Product image"
+                    <img :src="imageUrl ?? 'https://placehold.co/200'" alt="Product image"
                         class="w-60 rounded-lg border-2 border-neutral-600">
                 </div>
 

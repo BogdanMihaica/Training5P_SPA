@@ -89,7 +89,7 @@ export default {
                         {{ product.id }}
                     </td>
                     <td>
-                        <img class="h-20 rounded-lg" :src="product.image" alt="Product image">
+                        <img class="h-20 rounded-lg" :src="product.image_url" alt="Product image">
                     </td>
                     <td>
                         {{ product.title }}

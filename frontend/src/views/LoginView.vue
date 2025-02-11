@@ -1,13 +1,17 @@
 <script>
 import { } from '@/common/helpers';
+import ErrorMessage from '@/components/Error/ErrorMessage.vue';
 import { useAuthStore } from '@/stores/authStore';
 
 
 export default {
+    components: { ErrorMessage },
+
     data() {
         return {
-            email: '',
-            password: ''
+            email: "",
+            password: "",
+            errors: {}
         };
     },
 
@@ -18,7 +22,7 @@ export default {
         async handleLogin() {
             let authStore = useAuthStore();
 
-            authStore.login(this.email, this.password)
+            this.errors = await authStore.login(this.email, this.password)
         }
     }
 };
@@ -33,6 +37,7 @@ export default {
                     <input type="email" id="email" v-model="email"
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                         :placeholder="$t('enterEmail')" />
+                    <ErrorMessage :error="errors.email" />
                 </div>
 
                 <div class="mb-6">
@@ -40,6 +45,7 @@ export default {
                     <input type="password" id="password" v-model="password"
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                         :placeholder="$t('enterPassword')" />
+                    <ErrorMessage :error="errors.password" />
                 </div>
 
                 <div class="flex items-center justify-between">

@@ -37,5 +37,12 @@
     "viewOrder" : "View order",
     "ordersDashboard" : "Orders dashboard",
     "actions" : "Actions",
-    "order" : "Order"
+    "order" : "Order",
+    "total" : "Total",
+    "grandTotal": "Grand Total",
+    "editProduct" : "Edit product",
+    "publish" : "Publish",
+    "enterTitle" : "Enter product title",
+    "enterDescription" : "Enter product description",
+    "enterPrice" : "Enter product price"
 }
