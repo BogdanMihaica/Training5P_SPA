@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/spa')->group(function () {
     Route::controller(ProductController::class)->group(function(){
         Route::get('/products','index');
-        Route::get('/products/{product}','edit');
         
         Route::middleware(['auth:sanctum'])->group(function(){
+            Route::get('/products/all', 'all');
+            Route::get('/products/{product}','edit');
             Route::patch('/products/{product}', 'update');
             Route::post('/products/{product}', 'store');
             Route::delete('/products/{product}', 'destroy');
@@ -26,10 +27,14 @@ Route::prefix('/spa')->group(function () {
     });
 
     Route::controller(OrderController::class)->group(function(){
-        Route::get('/orders', 'index');
-        Route::get('/order/{order}', 'show');
         Route::post('/orders','store');
+
+        Route::middleware('auth:sanctum')->group(function(){
+            Route::get('/orders', 'index');
+            Route::get('/orders/{order}', 'products');
+        });
     });
+
     Route::get('/csrf-token', function () {
         return response()->json(['csrf_token' => csrf_token()]);
     });

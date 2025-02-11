@@ -2,6 +2,7 @@
 import ProductLoader from '@/components/Loaders/ProductLoader.vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
 	components: { ProductCard, ProductLoader },
@@ -10,7 +11,9 @@ export default {
 		return {
 			products: [],
 			loaded: false,
-			checkoutOpen: false
+			checkoutOpen: false,
+			name: '',
+			email: ''
 		}
 	},
 
@@ -20,7 +23,7 @@ export default {
 
 	methods: {
 		/**
-		 * Async function that fetches the products from the server session variable 'cart'
+		 * Fetches the products corresponding with the server session variable 'cart'
 		 */
 		async getProducts() {
 
@@ -49,6 +52,33 @@ export default {
 		 */
 		toggleCheckout() {
 			this.checkoutOpen = !this.checkoutOpen;
+		},
+
+		async handleCheckout() {
+			const body = {
+				name: this.name,
+				email: this.email
+			}
+
+			await axios.get('/sanctum/csrf-cookie');
+
+			await axios.post(`/spa/orders`, body).then(() => {
+				Swal.fire({
+					title: "Success",
+					text: "Order placed successfully!",
+					icon: "success"
+				});
+
+				this.products = [];
+			}).catch(error => {
+				Swal.fire({
+					title: "Ugh...",
+					text: "Something wrong happened",
+					icon: "error"
+				});
+				console.log(error.response);
+			});
+
 		}
 	}
 }
@@ -73,14 +103,18 @@ export default {
 			@click.prevent="toggleCheckout()">
 			{{ $t('checkout') }}
 		</button>
+
 		<div class="w-100 h-90 bg-neutral-800 border-1 border-violet-600 flex justify-center items-center flex-col rounded-lg"
 			v-else>
+
 			<div class="w-full flex flex-row-reverse">
 				<button class="cursor-pointer w-40 text-white" @click.prevent="toggleCheckout()">
 					<i class="fas fa-x"></i>
 				</button>
 			</div>
+
 			<h2 class="text-2xl font-semibold text-center text-white mb-6">{{ $t('checkout') }}</h2>
+
 			<form @submit.prevent="handleLogin" class="w-[70%]">
 				<div class="mb-4">
 					<label for="customer-email" class="block text-sm font-medium text-gray-300">
@@ -90,16 +124,18 @@ export default {
 						class="text-white w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
 						:placeholder="$t('enterEmail')" />
 				</div>
+
 				<div class="mb-6">
 					<label for="name" class="block text-sm font-medium text-gray-300">{{ $t('name') }}</label>
 					<input type="text" id="name" v-model="name"
 						class="text-white w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
 						:placeholder="$t('enterName')" />
 				</div>
+
 				<div class="flex items-center justify-between">
-					<button type="submit"
-						class="cursor-pointer w-full py-2 px-4 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500">
-						{{ $t('login') }}
+					<button type="submit" class="cursor-pointer w-full py-2 px-4 bg-violet-600 text-white rounded-md 
+						hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500" @click.prevent="handleCheckout">
+						{{ $t('submit') }}
 					</button>
 				</div>
 			</form>

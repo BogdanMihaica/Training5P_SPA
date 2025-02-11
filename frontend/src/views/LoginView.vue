@@ -34,16 +34,18 @@ export default {
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                         :placeholder="$t('enterEmail')" />
                 </div>
+
                 <div class="mb-6">
                     <label for="password" class="block text-sm font-medium text-gray-300">{{ $t('password') }}</label>
                     <input type="password" id="password" v-model="password"
                         class="w-full p-2 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                         :placeholder="$t('enterPassword')" />
                 </div>
+
                 <div class="flex items-center justify-between">
                     <button type="submit"
                         class="cursor-pointer w-full py-2 px-4 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500">
-                        {{ $t('submit') }}
+                        {{ $t('login') }}
                     </button>
                 </div>
             </form>

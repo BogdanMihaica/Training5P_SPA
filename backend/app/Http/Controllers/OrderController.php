@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderProductsCollection;
 use App\Http\Resources\OrderResource;
 use App\Mail\OrderPosted;
 use App\Models\Order;
@@ -75,7 +76,7 @@ class OrderController extends Controller
      * 
      * @return OrderResource
      */
-    public function show(Order $order)
+    public function products(Order $order)
     {
         return new OrderResource($order);
     }

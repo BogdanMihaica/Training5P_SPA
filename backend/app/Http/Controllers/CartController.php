@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CartProductCollection;
+use App\Http\Resources\CartProductsCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -12,14 +12,14 @@ class CartController extends Controller
     /**
      * Returns a collection of products that are present in the session cart variable
      * 
-     * @return CartProductCollection
+     * @return CartProductsCollection
      */
     public function index()
     {
         $cartItems = Session::get('cart', []);
         $products = Product::whereIn('id', $cartItems ? array_keys($cartItems) : [])->get();
 
-        return new CartProductCollection($products);
+        return new CartProductsCollection($products);
     }
 
     /**

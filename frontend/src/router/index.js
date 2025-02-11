@@ -7,6 +7,7 @@ import OrdersDashboardView from '@/views/OrdersDashboardView.vue'
 import OrderView from '@/views/OrderView.vue'
 import ProductManageView from '@/views/ProductManageView.vue'
 import { useAuthStore } from '@/stores/authStore'
+import NotFound from '@/components/NotFound/NotFound.vue'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,22 +48,26 @@ const router = createRouter({
 			component: ProductManageView,
 		},
 		{
-			path: '/product/:id',
+			path: '/product/:id/edit',
 			name: 'product',
 			component: ProductManageView,
 		},
+		{
+			path: "/:catchAll(.*)",
+			component: NotFound
+		}
 	],
 })
 
 router.beforeEach(async (to, from, next) => {
 	const authStore = useAuthStore();
-	const publicRoutes = ['home', 'cart'];
+	const privateRoutes = ['products', 'product', 'orders', 'order', 'upload', 'login'];
 
 	if (!authStore.isInitialized) {
 		await authStore.initialize();
 	}
 
-	if(!publicRoutes.includes(to.name)) {
+	if(privateRoutes.includes(to.name)) {
 		if(to.name === 'login' && authStore.isAuthenticated) {
 			next({ name: 'products' });
 		} else if (to.name !== 'login' && !authStore.isAuthenticated ) {

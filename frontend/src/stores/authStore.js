@@ -1,3 +1,4 @@
+import router from '@/router';
 import axios from 'axios';
 import { defineStore } from 'pinia'
 import Swal from 'sweetalert2';
@@ -33,7 +34,8 @@ export const useAuthStore = defineStore('auth',
 
 					this.isAuthenticated = true;
 					localStorage.setItem('token', res.data.token);
-					
+
+					router.push({ name: 'home' });
 				}).catch(error => {
 					Swal.fire({
 						title: "Ugh...",
@@ -53,6 +55,7 @@ export const useAuthStore = defineStore('auth',
 				await axios.post(`/spa/logout`).then(()=>{
 					this.isAuthenticated = false;
 					localStorage.removeItem('token');
+					router.push({ name: 'home' });
 				});
 			},
 
