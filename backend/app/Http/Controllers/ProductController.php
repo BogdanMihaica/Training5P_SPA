@@ -32,7 +32,7 @@ class ProductController extends Controller
 
      * @return ProductResource
      */
-    public function edit(Product $product)
+    public function getProduct(Product $product)
     {
         return new ProductResource($product);
     }
@@ -44,15 +44,13 @@ class ProductController extends Controller
      */
     public function all()
     {
-        return new ProductCollection(Product::all());
+        return new ProductCollection(Product::orderByDesc('created_at')->get());
     }
 
     /**
      * Deletes a product from the database, as well as its corresponding image from the storage if there is one
      * 
      * @param Product $product
-     * 
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Product $product)
     {
@@ -61,8 +59,6 @@ class ProductController extends Controller
         }
 
         $product->delete();
-
-        return response()->json(['status' => 'ok']);
     }
 
     /**

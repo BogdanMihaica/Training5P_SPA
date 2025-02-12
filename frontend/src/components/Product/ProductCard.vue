@@ -19,7 +19,7 @@ export default {
         imageUrl: String,
         description: String,
         price: Number,
-        cart: {
+        isCartPage: {
             type: Boolean,
             default: false
         },
@@ -101,7 +101,7 @@ export default {
 </script>
 
 <template>
-    <div class="w-70 min-h-120 rounded-3xl border-2 border-neutral-600 overflow-hidden 
+    <div class="w-70 min-h-120 rounded-xl border-2 border-neutral-600 overflow-hidden 
         bg-gradient-to-t from-neutral-800 to-neutral-700">
         <div class="w-full flex-col items-center text-violet-100 p-4 h-full">
             <div class="flex flex-col h-full auto items-center justify-between space-y-4">
@@ -113,15 +113,15 @@ export default {
 
                 <h2 class="text-2xl">{{ title }}</h2>
                 <h3 class="text-xs mx-5">{{ description }}</h3>
-                <h2 class="text-2xl" v-show="cart"> {{ $t('quantity') + ": " + boughtQuantity }}</h2>
+                <h2 class="text-2xl" v-show="isCartPage"> {{ $t('quantity') + ": " + boughtQuantity }}</h2>
                 <h2 class="text-3xl text-violet-300">${{ price }}</h2>
 
                 <div class="flex justify-center items-center mt-1 flex-col">
-                    <ProductButton :cart="cart" @add="addToCart(id, quantity)" @remove="removeFromCart(id)" />
+                    <ProductButton :cart="isCartPage" @add="addToCart(id, quantity)" @remove="removeFromCart(id)" />
 
-                    <label :for="`quantity-${id}`" v-show="!cart">{{ $t('selectQuantity') }}</label>
+                    <label :for="`quantity-${id}`" v-show="!isCartPage">{{ $t('selectQuantity') }}</label>
 
-                    <select :id="`quantity-${id}`" v-model="quantity" v-show="!cart">
+                    <select :id="`quantity-${id}`" v-model="quantity" v-show="!isCartPage">
                         <option v-for="i in 10" :key="i" class="text-black">
                             {{ i }}
                         </option>

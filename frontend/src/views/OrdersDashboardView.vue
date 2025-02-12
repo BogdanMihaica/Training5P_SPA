@@ -1,10 +1,14 @@
 <script>
+import SquaresLoader from '@/components/Loaders/SquaresLoader.vue';
 import axios from 'axios';
 
 export default {
+    components: { SquaresLoader },
+
     data() {
         return {
-            orders: []
+            orders: [],
+            loaded: false
         }
     },
 
@@ -25,6 +29,7 @@ export default {
                 .catch(error => {
                     console.error("There was an error fetching the orders:", error);
                 });
+            this.loaded = true;
         },
     }
 }
@@ -33,7 +38,9 @@ export default {
 <template>
     <h1 class="text-white text-center text-5xl mb-10">{{ $t('ordersDashboard') }}</h1>
     <div class="w-full flex flex-col justify-center items-center text-white">
-        <table class="w-[90%] rounded-lg">
+        <SquaresLoader v-if="!loaded" />
+
+        <table v-else class="w-[90%] rounded-lg">
             <thead>
                 <tr class="bg-violet-800">
                     <th class="rounded-tl-lg">
@@ -68,12 +75,11 @@ export default {
                         {{ order.created_at }}
                     </td>
                     <td>
-                        <button
-                            class="mx-auto px-4 py-1 bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600 focus:ring-blue-400 focus:ring-1">
-                            <RouterLink :to="{ name: 'order', params: { id: order.id } }">
-                                {{ $t('viewOrder') }}
-                            </RouterLink>
-                        </button>
+                        <RouterLink
+                            class="mx-auto px-4 py-1 bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600 focus:ring-blue-400 focus:ring-1"
+                            :to="{ name: 'order', params: { id: order.id } }">
+                            {{ $t('viewOrder') }}
+                        </RouterLink>
                     </td>
                 </tr>
             </tbody>

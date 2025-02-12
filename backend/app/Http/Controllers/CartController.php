@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CartProductsCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,8 +28,6 @@ class CartController extends Controller
      * Stores an item in the cart if it doesn't already exist
      * 
      * @param Product $product
-     * 
-     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request, Product $product)
     {
@@ -37,9 +36,7 @@ class CartController extends Controller
         ]);
 
         $id = $product->getKey();
-
         $cartItems = Session::get('cart',[]);
-        
         $quantity = $validated['quantity'];
         
         Validator::make(['cart' => $cartItems], 
@@ -52,16 +49,12 @@ class CartController extends Controller
         
         $cartItems[$id] = $quantity;
         Session::put('cart', $cartItems);
-
-        return response()->json();
     }
 
     /**
      * Removes an item from the session cart variable if it exists and returns a status code
      * 
      * @param Product $product
-     * 
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Product $product)
     {
@@ -79,7 +72,5 @@ class CartController extends Controller
 
         unset($cartItems[$id]);
         Session::put('cart', $cartItems);
-
-        return response()->json();
     }
 }

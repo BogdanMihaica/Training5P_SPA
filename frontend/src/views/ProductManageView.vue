@@ -48,7 +48,8 @@ export default {
         },
 
         /**
-         * Handles the process of patching or posting the active element from the database
+         * Handles the process of patching or posting the active element from the database by using a FormData objejct
+         * to successfully send the image to the server
          */
         async handleSubmit() {
             let formData = new FormData();
@@ -79,6 +80,9 @@ export default {
                         text: "Product updated succesfully!",
                         icon: "success"
                     });
+
+                    router.push({ name: "products" });
+
                 }).catch((error) => {
                     this.errors = error.response.data.errors
                 });
@@ -88,13 +92,16 @@ export default {
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then((res) => {
-                    console.log(res);
-
                     Swal.fire({
                         title: "Success",
                         text: "Product uploaded succesfully!",
                         icon: "success"
                     });
+
+                    const createdId = res.data.data.id;
+
+                    router.push({ name: "product", params: { id: createdId } })
+
                 }).catch((error) => {
                     this.errors = error.response.data.errors;
                 });
@@ -108,12 +115,34 @@ export default {
          */
         handleImageChange(e) {
             this.image = e.target.files[0];
+        },
+
+        /**
+         * Resets the used data from the page. Used when the route path changes
+         */
+        resetData() {
+            this.id = 0;
+            this.title = "";
+            this.description = "";
+            this.price = "";
+            this.currentImageUrl = "";
+            this.image = null;
+            this.edit = false;
+            this.errors = {};
+            this.loaded = false;
         }
     },
 
     mounted() {
         this.getProduct();
     },
+
+    watch: {
+        '$route.path'() {
+            this.resetData();
+            this.getProduct();
+        }
+    }
 }
 </script>
 
@@ -168,7 +197,7 @@ export default {
                         {{ $t('image') }}
                     </label>
                     <input
-                        class="mt-2 block w-full h-12text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none"
+                        class="mt-2 block w-full h-8 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none"
                         type="file" id="image" @change="handleImageChange($event)" />
                     <ErrorMessage :error="errors.image" />
                 </div>

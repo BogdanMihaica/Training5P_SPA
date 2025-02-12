@@ -53,7 +53,9 @@ export const useAuthStore = defineStore('auth',
 
 				await axios.post(`/spa/logout`).then(()=>{
 					this.isAuthenticated = false;
+					
 					localStorage.removeItem('token');
+
 					router.push({ name: 'home' });
 				});
 			},

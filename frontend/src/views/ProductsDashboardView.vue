@@ -1,11 +1,15 @@
 <script>
+import SquaresLoader from '@/components/Loaders/SquaresLoader.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default {
+    components: { SquaresLoader },
+
     data() {
         return {
-            products: []
+            products: [],
+            loaded: false
         }
     },
 
@@ -26,29 +30,32 @@ export default {
                 .catch(error => {
                     console.error("There was an error fetching the products:", error);
                 });
+            this.loaded = true;
         },
 
+        /**
+         * Handles the deletion of a product by its id and removes the item from the product list by its index
+         * @param id 
+         * @param index 
+         */
         async handleDelete(id, index) {
-
             await axios.get('/sanctum/csrf-cookie');
 
-            await axios.delete(`/spa/products/${id}`)
-                .then(() => {
-                    this.products.splice(index, 1)
+            await axios.delete(`/spa/products/${id}`).then(() => {
+                this.products.splice(index, 1);
 
-                    Swal.fire({
-                        title: "Success",
-                        text: "Succesfully deleted item with id " + id,
-                        icon: "success"
-                    });
-                })
-                .catch(() => {
-                    Swal.fire({
-                        title: "Ugh...",
-                        text: "Something went wrong.",
-                        icon: "error"
-                    });
-                })
+                Swal.fire({
+                    title: "Success",
+                    text: "Succesfully deleted item with id " + id,
+                    icon: "success"
+                });
+            }).catch(() => {
+                Swal.fire({
+                    title: "Ugh...",
+                    text: "Something went wrong.",
+                    icon: "error"
+                });
+            })
         }
     }
 }
@@ -57,7 +64,8 @@ export default {
 <template>
     <h1 class="text-white text-center text-5xl mb-10">{{ $t('dashboard') }}</h1>
     <div class="w-full flex flex-col justify-center items-center text-white">
-        <table class="w-[90%] rounded-lg">
+        <SquaresLoader v-if="!loaded" />
+        <table v-else class="w-[90%] rounded-lg">
             <thead>
                 <tr class="bg-violet-800">
                     <th class="rounded-tl-lg">

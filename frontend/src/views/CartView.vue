@@ -56,6 +56,9 @@ export default {
 			this.checkoutOpen = !this.checkoutOpen;
 		},
 
+		/**
+		 * Handles the checkout process by making a post request to the server
+		 */
 		async handleCheckout() {
 			const body = {
 				name: this.name,

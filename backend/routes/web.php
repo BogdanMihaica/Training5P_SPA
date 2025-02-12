@@ -15,7 +15,7 @@ Route::middleware([SetLocaleMiddleware::class])->group(function () {
             
             Route::middleware(['auth:sanctum'])->group(function(){
                 Route::get('/products/all', 'all');
-                Route::get('/products/{product}','edit');
+                Route::get('/products/{product}','getProduct');
                 Route::put('/products/{product}', 'update');
                 Route::post('/products', 'store');
                 Route::delete('/products/{product}', 'destroy');
