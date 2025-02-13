@@ -2,7 +2,6 @@
 import ErrorMessage from '@/components/Error/ErrorMessage.vue';
 import { useAuthStore } from '@/stores/authStore';
 
-
 export default {
     components: { ErrorMessage },
 

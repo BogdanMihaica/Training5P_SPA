@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CartProductsCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,7 +51,7 @@ class CartController extends Controller
     }
 
     /**
-     * Removes an item from the session cart variable if it exists and returns a status code
+     * Removes an item from the session cart variable if it exists
      * 
      * @param Product $product
      */

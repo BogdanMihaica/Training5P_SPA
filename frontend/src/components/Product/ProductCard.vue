@@ -1,7 +1,6 @@
 <script>
 import axios from 'axios';
 import ProductButton from './ProductButton.vue';
-import { getCookie } from '@/common/helpers';
 import Swal from 'sweetalert2';
 
 export default {
@@ -71,12 +70,9 @@ export default {
         async removeFromCart(id) {
             await axios.get('/sanctum/csrf-cookie');
 
-            let xsrfToken = getCookie('XSRF-TOKEN');
-
             await axios.delete(`/spa/cart/${id}`, {
                 headers: {
-                    'accept': 'application/json',
-                    'X-XSRF-TOKEN': xsrfToken
+                    'accept': 'application/json'
                 },
             })
                 .then(() => {

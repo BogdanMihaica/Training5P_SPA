@@ -95,7 +95,7 @@ export default {
 	<div class="w-full flex flex-wrap gap-4 justify-center">
 		<ProductCard v-for="(product, i) in products" :key="product.id" :title="product.title"
 			:description="product.description" :imageUrl="product.image_url" :id="product.id" :price="product.price"
-			@removed="removeItemFromList(i)" :cart="true" :bought-quantity="product.quantity" />
+			@removed="removeItemFromList(i)" :is-cart-page="true" :bought-quantity="product.quantity" />
 	</div>
 
 	<div class="my-6 w-full flex justify-center items-center flex-col">
